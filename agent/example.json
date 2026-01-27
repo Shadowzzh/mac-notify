@@ -1,0 +1,9 @@
+{
+  "title": "项目名称（从工作目录提取）",
+  "message": "具体的通知消息，例如：有问题需要回答 / 任务已完成 / 发生错误",
+  "project": "当前工作目录的完整路径",
+  "cwd": "当前工作目录名称（最后一级目录）",
+  "type": "question | success | error | info",
+  "timestamp": "ISO 8601 格式的时间戳，例如：2026-01-27T10:30:00Z",
+  "action": "focus | none（可选，question 类型建议使用 focus）"
+}
