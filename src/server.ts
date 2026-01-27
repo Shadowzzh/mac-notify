@@ -90,11 +90,15 @@ fastify.get('/health', async () => {
 // 启动服务器
 const start = async () => {
   try {
-    const host = '100.103.79.86';
+    const host = '0.0.0.0'; // 监听所有网络接口
     const port = 8079;
 
     await fastify.listen({ host, port });
-    console.log(`🚀 Master service running at http://${host}:${port}`);
+    console.log(`🚀 Master service running at http://0.0.0.0:${port}`);
+    console.log('   可通过以下地址访问：');
+    console.log(`   - http://127.0.0.1:${port}`);
+    console.log(`   - http://192.168.3.64:${port}`);
+    console.log(`   - http://100.109.26.102:${port} (Tailscale)`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
