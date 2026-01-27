@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+使用中文回复
+
 此文件为 Claude Code (claude.ai/code) 在此仓库中工作时提供指导。
 
 ## 项目概述
