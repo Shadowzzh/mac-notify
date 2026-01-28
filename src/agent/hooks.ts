@@ -1,4 +1,4 @@
-import type { ClaudeHookMatcher } from '../types.js';
+import type { ClaudeHookMatcher } from './types.js';
 
 /**
  * 生成 Claude Code Hook 配置

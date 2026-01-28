@@ -1,7 +1,6 @@
 import prompts from 'prompts';
-import { writeAgentConfig } from '../shared/config.js';
 import { checkMasterHealth } from '../shared/health.js';
-import type { AgentConfig, InstallOptions } from '../types.js';
+import { writeAgentConfig } from './config.js';
 import { generateHookConfig } from './hooks.js';
 import {
   backupClaudeSettings,
@@ -10,11 +9,12 @@ import {
   readClaudeSettings,
   writeClaudeSettings,
 } from './settings.js';
+import type { AgentConfig, AgentInstallOptions } from './types.js';
 
 /**
  * 安装 Agent hooks
  */
-export async function installAgent(options: InstallOptions): Promise<void> {
+export async function installAgent(options: AgentInstallOptions): Promise<void> {
   console.log('🚀 开始安装 Agent hooks...\n');
 
   // 1. 获取 Master URL
@@ -67,7 +67,7 @@ export async function installAgent(options: InstallOptions): Promise<void> {
 /**
  * 获取 Master URL
  */
-async function getMasterUrl(options: InstallOptions): Promise<string> {
+async function getMasterUrl(options: AgentInstallOptions): Promise<string> {
   if (options.url) {
     return options.url;
   }
@@ -85,7 +85,7 @@ async function getMasterUrl(options: InstallOptions): Promise<string> {
 /**
  * 询问是否自动更新配置
  */
-async function shouldAutoUpdate(options: InstallOptions): Promise<boolean> {
+async function shouldAutoUpdate(options: AgentInstallOptions): Promise<boolean> {
   if (options.auto !== undefined) {
     return options.auto;
   }

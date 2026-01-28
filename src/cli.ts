@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { handleInstall } from './commands/install.js';
+import { startMaster } from './commands/start.js';
 
 const program = new Command();
 
@@ -15,5 +16,7 @@ program
   .option('-p, --port <port>', 'Master 服务端口')
   .option('--auto', '自动更新配置文件', false)
   .action(handleInstall);
+
+program.command('start-master').description('启动 Master 服务').action(startMaster);
 
 program.parse();
