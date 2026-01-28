@@ -9,10 +9,10 @@
   },
   "scripts": {
     "dev": "tsx watch src/cli.ts",
-    "dev:server": "tsx watch src/master/server.ts",
+    "dev:master": "tsx watch src/commands/start.ts",
     "build": "tsup",
     "start": "node dist/cli.js",
-    "start:server": "node dist/master/server.js",
+    "start:master": "node dist/cli.js start-master",
     "check": "biome check .",
     "check:fix": "biome check --write .",
     "lint": "biome lint .",

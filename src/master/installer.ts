@@ -1,12 +1,12 @@
 import prompts from 'prompts';
-import { writeMasterConfig } from '../shared/config.js';
 import { formatUrl } from '../shared/utils.js';
-import type { InstallOptions, MasterConfig } from '../types.js';
+import { writeMasterConfig } from './config.js';
+import type { MasterConfig, MasterInstallOptions } from './types.js';
 
 /**
  * 安装 Master 服务
  */
-export async function installMaster(options: InstallOptions): Promise<void> {
+export async function installMaster(options: MasterInstallOptions): Promise<void> {
   console.log('🚀 开始安装 Master 服务...\n');
 
   // 1. 获取配置
@@ -23,7 +23,7 @@ export async function installMaster(options: InstallOptions): Promise<void> {
 /**
  * 获取 Master 配置
  */
-async function getMasterConfig(options: InstallOptions): Promise<MasterConfig> {
+async function getMasterConfig(options: MasterInstallOptions): Promise<MasterConfig> {
   let host = options.host || process.env.HOST || '0.0.0.0';
   let port = options.port
     ? Number.parseInt(options.port, 10)

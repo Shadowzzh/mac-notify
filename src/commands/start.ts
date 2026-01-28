@@ -1,0 +1,99 @@
+import cors from '@fastify/cors';
+import { config } from 'dotenv';
+import Fastify from 'fastify';
+import { readMasterConfig } from '../master/config.js';
+import { Notifier } from '../master/notifier.js';
+import type { NotifyRequest } from '../shared/types.js';
+
+// 加载 .env 配置
+config();
+
+// 从环境变量读取配置
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+/**
+ * 启动 Master 服务
+ */
+export async function startMaster(): Promise<void> {
+  const fastify = Fastify({
+    logger: {
+      level: LOG_LEVEL,
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          translateTime: 'HH:MM:ss Z',
+          ignore: 'pid,hostname',
+        },
+      },
+    },
+  });
+
+  // 创建 Notifier 实例
+  const notifier = new Notifier({
+    soundQuestion: process.env.NOTIFICATION_SOUND_QUESTION,
+    soundError: process.env.NOTIFICATION_SOUND_ERROR,
+    soundDefault: process.env.NOTIFICATION_SOUND_DEFAULT,
+  });
+
+  // 注册 CORS
+  await fastify.register(cors, {
+    origin: true,
+  });
+
+  // POST /notify - 接收通知请求
+  fastify.post<{ Body: NotifyRequest }>('/notify', async (request, reply) => {
+    const data = request.body;
+
+    // 验证必需字段
+    if (!data.title || !data.message || !data.type) {
+      return reply.code(400).send({
+        success: false,
+        message: 'Missing required fields: title, message, type',
+      });
+    }
+
+    // 异步发送通知(不等待结果)
+    notifier.send(data, fastify.log).catch(() => {
+      // 错误已在 notifier 中记录
+    });
+
+    // 立即返回成功(fire-and-forget)
+    return {
+      success: true,
+      message: '通知已发送',
+    };
+  });
+
+  // GET /health - 健康检查
+  fastify.get('/health', async () => {
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    };
+  });
+
+  // 启动服务器
+  try {
+    // 尝试从配置文件读取
+    const config = await readMasterConfig();
+    const host = config?.host || process.env.HOST || '0.0.0.0';
+    const port = config?.port || Number.parseInt(process.env.PORT || '8079', 10);
+
+    await fastify.listen({ host, port });
+    console.log(`🚀 Master service running at http://${host}:${port}`);
+    console.log('   可通过以下地址访问：');
+    console.log(`   - http://127.0.0.1:${port}`);
+
+    if (config?.url) {
+      console.log(`   - ${config.url}`);
+    }
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+}
+
+// 如果直接运行此文件（开发模式），则启动服务
+if (import.meta.url === `file://${process.argv[1]}`) {
+  startMaster();
+}
