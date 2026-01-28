@@ -11,6 +11,7 @@
     "dev": "tsx watch src/cli.ts",
     "dev:master": "tsx watch src/commands/start.ts",
     "build": "tsup",
+    "build:prod": "NODE_ENV=production tsup",
     "start": "node dist/cli.js",
     "start:master": "node dist/cli.js start-master",
     "check": "biome check .",
@@ -28,6 +29,7 @@
     "commander": "^12.1.0",
     "dotenv": "^17.2.3",
     "fastify": "^4.26.0",
+    "get-port": "^7.1.0",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
