@@ -1,12 +1,23 @@
-import Fastify from 'fastify';
-import cors from '@fastify/cors';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
+import cors from '@fastify/cors';
+import { config } from 'dotenv';
+import Fastify from 'fastify';
+
+// 加载 .env 配置
+config();
 
 const execAsync = promisify(exec);
 
+// 从环境变量读取配置
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const NOTIFICATION_SOUND_QUESTION = process.env.NOTIFICATION_SOUND_QUESTION || 'Ping';
+const NOTIFICATION_SOUND_ERROR = process.env.NOTIFICATION_SOUND_ERROR || 'Basso';
+const NOTIFICATION_SOUND_DEFAULT = process.env.NOTIFICATION_SOUND_DEFAULT || 'default';
+
 const fastify = Fastify({
   logger: {
+    level: LOG_LEVEL,
     transport: {
       target: 'pino-pretty',
       options: {
@@ -38,7 +49,12 @@ async function sendNotification(data: NotifyRequest): Promise<void> {
   const { title, message, type } = data;
 
   // 根据类型选择通知声音
-  const sound = type === 'error' ? 'Basso' : type === 'question' ? 'Ping' : 'default';
+  let sound = NOTIFICATION_SOUND_DEFAULT;
+  if (type === 'error') {
+    sound = NOTIFICATION_SOUND_ERROR;
+  } else if (type === 'question') {
+    sound = NOTIFICATION_SOUND_QUESTION;
+  }
 
   const script = `
     display notification "${message.replace(/"/g, '\\"')}" ¬
@@ -90,11 +106,11 @@ fastify.get('/health', async () => {
 // 启动服务器
 const start = async () => {
   try {
-    const host = '0.0.0.0'; // 监听所有网络接口
-    const port = 8079;
+    const host = process.env.HOST || '0.0.0.0'; // 监听所有网络接口
+    const port = Number.parseInt(process.env.PORT || '8079', 10);
 
     await fastify.listen({ host, port });
-    console.log(`🚀 Master service running at http://0.0.0.0:${port}`);
+    console.log(`🚀 Master service running at http://${host}:${port}`);
     console.log('   可通过以下地址访问：');
     console.log(`   - http://127.0.0.1:${port}`);
     console.log(`   - http://192.168.3.64:${port}`);
