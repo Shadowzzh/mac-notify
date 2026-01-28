@@ -1,7 +1,7 @@
-import { installAgent } from '../agent/installer.js';
-import type { AgentInstallOptions } from '../agent/types.js';
-import { installMaster } from '../master/installer.js';
-import type { MasterInstallOptions } from '../master/types.js';
+import { installAgent } from '../agent/installer';
+import type { AgentInstallOptions } from '../agent/types';
+import { installMaster } from '../master/installer';
+import type { MasterInstallOptions } from '../master/types';
 
 /**
  * 处理 install 命令

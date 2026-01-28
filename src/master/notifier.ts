@@ -1,6 +1,6 @@
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import type { NotifyRequest } from '../shared/types.js';
+import type { NotifyRequest } from '../shared/types';
 
 const execAsync = promisify(exec);
 

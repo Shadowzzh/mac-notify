@@ -1,15 +1,15 @@
 import prompts from 'prompts';
-import { checkMasterHealth } from '../shared/health.js';
-import { writeAgentConfig } from './config.js';
-import { generateHookConfig } from './hooks.js';
+import { checkMasterHealth } from '../shared/health';
+import { writeAgentConfig } from './config';
+import { generateHookConfig } from './hooks';
 import {
   backupClaudeSettings,
   getClaudeSettingsPath,
   mergeHookConfig,
   readClaudeSettings,
   writeClaudeSettings,
-} from './settings.js';
-import type { AgentConfig, AgentInstallOptions } from './types.js';
+} from './settings';
+import type { AgentConfig, AgentInstallOptions } from './types';
 
 /**
  * 安装 Agent hooks

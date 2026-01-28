@@ -1,6 +1,6 @@
 import { join } from 'node:path';
-import { ensureConfigDir, getConfigDir, readJsonFile, writeJsonFile } from '../shared/utils.js';
-import type { MasterConfig } from './types.js';
+import { ensureConfigDir, getConfigDir, readJsonFile, writeJsonFile } from '../shared/utils';
+import type { MasterConfig } from './types';
 
 /**
  * 获取 Master 配置文件路径

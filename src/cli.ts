@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
+import './config';
 import { Command } from 'commander';
-import { handleInstall } from './commands/install.js';
-import { startMaster } from './commands/start.js';
+import { handleInstall } from './commands/install';
+import { startMaster } from './commands/start';
 
 const program = new Command();
 
