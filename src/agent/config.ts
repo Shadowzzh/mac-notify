@@ -1,6 +1,6 @@
 import { join } from 'node:path';
-import { ensureConfigDir, getConfigDir, readJsonFile, writeJsonFile } from '../shared/utils.js';
-import type { AgentConfig } from './types.js';
+import { ensureConfigDir, getConfigDir, readJsonFile, writeJsonFile } from '../shared/utils';
+import type { AgentConfig } from './types';
 
 /**
  * 获取 Agent 配置文件路径

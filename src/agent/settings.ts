@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import type { ClaudeHookMatcher, ClaudeSettings } from './types.js';
+import type { ClaudeHookMatcher, ClaudeSettings } from './types';
 
 /**
  * 获取 Claude settings.json 路径

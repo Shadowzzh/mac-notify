@@ -1,7 +1,8 @@
 import prompts from 'prompts';
-import { formatUrl } from '../shared/utils.js';
-import { writeMasterConfig } from './config.js';
-import type { MasterConfig, MasterInstallOptions } from './types.js';
+import { config } from '../config';
+import { formatUrl } from '../shared/utils';
+import { writeMasterConfig } from './config';
+import type { MasterConfig, MasterInstallOptions } from './types';
 
 /**
  * 安装 Master 服务
@@ -24,13 +25,11 @@ export async function installMaster(options: MasterInstallOptions): Promise<void
  * 获取 Master 配置
  */
 async function getMasterConfig(options: MasterInstallOptions): Promise<MasterConfig> {
-  let host = options.host || process.env.HOST || '0.0.0.0';
-  let port = options.port
-    ? Number.parseInt(options.port, 10)
-    : Number.parseInt(process.env.PORT || '8079', 10);
+  let host = options.host || config.server.host;
+  let port = options.port ? Number.parseInt(options.port, 10) : config.server.port;
 
   // 如果没有提供配置，则交互式询问
-  if (!options.host && !process.env.HOST) {
+  if (!options.host) {
     const response = await prompts([
       {
         type: 'text',

@@ -1,15 +1,9 @@
 import cors from '@fastify/cors';
-import { config } from 'dotenv';
 import Fastify from 'fastify';
-import { readMasterConfig } from '../master/config.js';
-import { Notifier } from '../master/notifier.js';
-import type { NotifyRequest } from '../shared/types.js';
-
-// 加载 .env 配置
-config();
-
-// 从环境变量读取配置
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+import { config } from '../config';
+import { readMasterConfig } from '../master/config';
+import { Notifier } from '../master/notifier';
+import type { NotifyRequest } from '../shared/types';
 
 /**
  * 启动 Master 服务
@@ -17,7 +11,7 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 export async function startMaster(): Promise<void> {
   const fastify = Fastify({
     logger: {
-      level: LOG_LEVEL,
+      level: config.logging.level,
       transport: {
         target: 'pino-pretty',
         options: {
@@ -30,9 +24,9 @@ export async function startMaster(): Promise<void> {
 
   // 创建 Notifier 实例
   const notifier = new Notifier({
-    soundQuestion: process.env.NOTIFICATION_SOUND_QUESTION,
-    soundError: process.env.NOTIFICATION_SOUND_ERROR,
-    soundDefault: process.env.NOTIFICATION_SOUND_DEFAULT,
+    soundQuestion: config.notification.soundQuestion,
+    soundError: config.notification.soundError,
+    soundDefault: config.notification.soundDefault,
   });
 
   // 注册 CORS
@@ -75,17 +69,17 @@ export async function startMaster(): Promise<void> {
   // 启动服务器
   try {
     // 尝试从配置文件读取
-    const config = await readMasterConfig();
-    const host = config?.host || process.env.HOST || '0.0.0.0';
-    const port = config?.port || Number.parseInt(process.env.PORT || '8079', 10);
+    const masterConfig = await readMasterConfig();
+    const host = masterConfig?.host || config.server.host;
+    const port = masterConfig?.port || config.server.port;
 
     await fastify.listen({ host, port });
     console.log(`🚀 Master service running at http://${host}:${port}`);
     console.log('   可通过以下地址访问：');
     console.log(`   - http://127.0.0.1:${port}`);
 
-    if (config?.url) {
-      console.log(`   - ${config.url}`);
+    if (masterConfig?.url) {
+      console.log(`   - ${masterConfig.url}`);
     }
   } catch (err) {
     fastify.log.error(err);
