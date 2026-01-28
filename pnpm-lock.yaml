@@ -20,6 +20,9 @@ importers:
       fastify:
         specifier: ^4.26.0
         version: 4.29.1
+      get-port:
+        specifier: ^7.1.0
+        version: 7.1.0
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -579,6 +582,10 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  get-port@7.1.0:
+    resolution: {integrity: sha512-QB9NKEeDg3xxVwCCwJQ9+xycaz6pBB6iQ76wiWMl1927n0Kir6alPiP+yuiICLLU4jpMe08dXfpebuQppFA2zw==}
+    engines: {node: '>=16'}
 
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
@@ -1270,6 +1277,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  get-port@7.1.0: {}
 
   get-tsconfig@4.13.0:
     dependencies:

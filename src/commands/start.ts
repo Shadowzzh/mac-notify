@@ -1,5 +1,6 @@
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
+import getPort from 'get-port';
 import { config } from '../config';
 import { readMasterConfig } from '../master/config';
 import { Notifier } from '../master/notifier';
@@ -71,15 +72,29 @@ export async function startMaster(): Promise<void> {
     // 尝试从配置文件读取
     const masterConfig = await readMasterConfig();
     const host = masterConfig?.host || config.server.host;
-    const port = masterConfig?.port || config.server.port;
+    const preferredPort = masterConfig?.port || config.server.port;
+
+    // 查找可用端口
+    const port = await getPort({ port: preferredPort });
+
+    // 如果端口被占用，提示用户
+    if (port !== preferredPort) {
+      console.log(`端口 ${preferredPort} 已被占用，使用端口 ${port} 代替\n`);
+    }
 
     await fastify.listen({ host, port });
-    console.log(`🚀 Master service running at http://${host}:${port}`);
-    console.log('   可通过以下地址访问：');
-    console.log(`   - http://127.0.0.1:${port}`);
+    console.log(`Master service running at http://${host}:${port}`);
+    console.log('可通过以下地址访问：');
+    console.log(`http://127.0.0.1:${port}`);
 
     if (masterConfig?.url) {
       console.log(`   - ${masterConfig.url}`);
+    }
+
+    // 如果端口变化，提示用户更新 agent 配置
+    if (port !== preferredPort) {
+      console.log('\n📋 安装 agent 时请使用以下地址：');
+      console.log(`   mac-notify install agent --url http://${host}:${port}`);
     }
   } catch (err) {
     fastify.log.error(err);
@@ -88,6 +103,6 @@ export async function startMaster(): Promise<void> {
 }
 
 // 如果直接运行此文件（开发模式），则启动服务
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === `file://${process.argv[1]}` && process.env.NODE_ENV !== 'production') {
   startMaster();
 }

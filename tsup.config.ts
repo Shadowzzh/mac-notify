@@ -1,5 +1,7 @@
 import { defineConfig } from 'tsup';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default defineConfig({
   entry: {
     cli: 'src/cli.ts',
@@ -9,8 +11,8 @@ export default defineConfig({
   clean: true,
   shims: true,
   splitting: false,
-  sourcemap: false,
-  minify: false,
+  sourcemap: !isProduction,
+  minify: isProduction,
   target: 'node18',
   outDir: 'dist',
 });
