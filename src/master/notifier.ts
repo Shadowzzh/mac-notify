@@ -1,28 +1,6 @@
 import notifier from 'node-notifier';
-import type { NotifyRequest } from '../shared/types';
+import type { Logger, NotifyRequest, NotifierConfig } from '../shared/types';
 import { resolveIconPath } from './utils';
-
-/**
- * 通知配置
- */
-export interface NotifierConfig {
-  soundQuestion?: string;
-  soundError?: string;
-  soundDefault?: string;
-  icon?: string;
-  contentImage?: string;
-  subtitle?: string;
-  timeout?: number;
-  wait?: boolean;
-}
-
-/**
- * Logger 接口
- */
-export interface Logger {
-  info: (obj: unknown, msg: string) => void;
-  error: (obj: unknown, msg: string) => void;
-}
 
 /**
  * 通知类型到声音的映射

@@ -1,7 +1,6 @@
 import { installAgent } from '../agent/installer';
-import type { AgentInstallOptions } from '../agent/types';
 import { installMaster } from '../master/installer';
-import type { MasterInstallOptions } from '../master/types';
+import type { AgentInstallOptions, MasterInstallOptions } from '../shared/types';
 
 /**
  * 处理 install 命令
