@@ -7,14 +7,7 @@
   "bin": {
     "mac-notify": "./bin/mac-notify.js"
   },
-  "files": [
-    "dist",
-    "bin",
-    "assets",
-    "scripts",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["dist", "bin", "assets", "scripts", "README.md", "LICENSE"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Shadowzzh/mac-notify.git"
@@ -39,12 +32,7 @@
     "prepublishOnly": "npm run all && npm run build:prod",
     "prepack": "npm run build:prod"
   },
-  "keywords": [
-    "claude",
-    "notification",
-    "fastify",
-    "cli"
-  ],
+  "keywords": ["claude", "notification", "fastify", "cli"],
   "author": "",
   "license": "MIT",
   "dependencies": {

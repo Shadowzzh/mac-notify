@@ -10,24 +10,10 @@ import type { NotifyRequest } from '../shared/types';
  * 启动 Master 服务
  */
 export async function startMaster(): Promise<void> {
-  // 开发环境使用 pino-pretty，生产环境使用简单 JSON 格式
-  const isDev = process.env.NODE_ENV !== 'production';
-
   const fastify = Fastify({
-    logger: isDev
-      ? {
-          level: config.logging.level,
-          transport: {
-            target: 'pino-pretty',
-            options: {
-              translateTime: 'HH:MM:ss Z',
-              ignore: 'pid,hostname',
-            },
-          },
-        }
-      : {
-          level: config.logging.level,
-        },
+    logger: {
+      level: config.logging.level,
+    },
   });
 
   // 创建 ConfigManager 实例
