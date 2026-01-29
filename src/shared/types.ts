@@ -461,6 +461,15 @@ export interface AgentInstallOptions {
   auto?: boolean;
 }
 
+/**
+ * Daemon 安装选项接口
+ * CLI 安装 Daemon 命令的参数
+ */
+export interface DaemonInstallOptions {
+  /** 强制重新安装 */
+  force?: boolean;
+}
+
 // ============================================================
 // 7. Agent Hooks 类型
 // ============================================================
@@ -501,7 +510,66 @@ export interface ClaudeSettings {
 }
 
 // ============================================================
-// 8. 健康检查类型
+// 8. Daemon 相关类型
+// ============================================================
+
+/**
+ * Daemon 配置文件接口
+ * 存储在 ~/.mac-notify/daemon.json 的配置
+ */
+export interface DaemonConfig {
+  /** 是否已安装 */
+  installed: boolean;
+  /** 安装时间 */
+  installedAt: string;
+  /** plist 文件路径 */
+  plistPath: string;
+  /** LaunchAgent 标签 */
+  label: string;
+  /** 日志文件路径 */
+  logPath: string;
+  /** 错误日志文件路径 */
+  errorLogPath: string;
+}
+
+/**
+ * Daemon 状态接口
+ */
+export interface DaemonStatus {
+  /** 是否正在运行 */
+  running: boolean;
+  /** 进程 ID */
+  pid?: number;
+  /** 运行时长（秒） */
+  uptime?: number;
+  /** LaunchAgent 标签 */
+  label: string;
+  /** plist 文件路径 */
+  plistPath: string;
+  /** 日志文件路径 */
+  logPath: string;
+}
+
+/**
+ * LaunchAgent 配置接口
+ */
+export interface LaunchAgentConfig {
+  /** LaunchAgent 标签 */
+  label: string;
+  /** 程序路径 */
+  programPath: string;
+  /** 工作目录 */
+  workingDirectory: string;
+  /** 日志文件路径 */
+  logPath: string;
+  /** 错误日志文件路径 */
+  errorLogPath: string;
+  /** 环境变量 */
+  environmentVariables?: Record<string, string>;
+}
+
+// ============================================================
+// 9. 健康检查类型
 // ============================================================
 
 /**

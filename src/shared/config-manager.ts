@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import { resolveIconPath } from '../master/utils';
 import type {
   AgentConfig,
+  DaemonConfig,
   MasterConfig,
   NotificationOptions,
   NotifierConfig,
@@ -86,6 +87,28 @@ export class ConfigManager {
   static async writeAgent(config: AgentConfig): Promise<void> {
     await ensureConfigDir();
     await writeJsonFile(ConfigManager.getAgentConfigPath(), config);
+  }
+
+  /**
+   * 获取 Daemon 配置文件路径
+   */
+  static getDaemonConfigPath(): string {
+    return join(getConfigDir(), 'daemon.json');
+  }
+
+  /**
+   * 读取 Daemon 配置
+   */
+  static async readDaemon(): Promise<DaemonConfig | null> {
+    return readJsonFile<DaemonConfig>(ConfigManager.getDaemonConfigPath());
+  }
+
+  /**
+   * 写入 Daemon 配置
+   */
+  static async writeDaemon(config: DaemonConfig): Promise<void> {
+    await ensureConfigDir();
+    await writeJsonFile(ConfigManager.getDaemonConfigPath(), config);
   }
 
   // ============================================================
