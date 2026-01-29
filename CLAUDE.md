@@ -27,7 +27,7 @@ src/
 ├── master/                # Master 服务相关
 │   ├── installer.ts       # Master 安装逻辑（交互式配置）
 │   ├── config.ts          # Master 配置读写（~/.mac-notify/master.json）
-│   ├── notifier.ts        # 通知封装（node-notifier）
+│   ├── notifier.ts        # 通知发送器（node-notifier 封装，无状态）
 │   └── utils.ts           # 图标路径解析
 ├── agent/                 # Agent hooks 相关
 │   ├── installer.ts       # Agent 安装逻辑（健康检查 + hooks 更新）
@@ -35,7 +35,8 @@ src/
 │   ├── hooks.ts           # 生成 Claude hooks 配置
 │   └── settings.ts        # Claude settings.json 操作
 └── shared/                # 共享代码
-    ├── types.ts           # NotifyRequest 等共享类型
+    ├── types.ts           # NotifyRequest、NotificationOptions 等共享类型
+    ├── config-manager.ts  # 配置管理器（合并配置优先级）
     ├── health.ts          # Master 健康检查
     └── utils.ts           # URL 格式化等工具函数
 ```
@@ -43,7 +44,7 @@ src/
 ### Master 服务（`src/commands/start.ts`）
 
 - Fastify HTTP 服务器，支持 CORS
-- **POST /notify**：接收通知请求，通过 Notifier 类发送系统通知
+- **POST /notify**：接收通知请求，通过 ConfigManager 合并配置后由 Notifier 发送系统通知
 - **GET /health**：健康检查端点
 - **Fire-and-forget 策略**：始终立即返回 200，通知失败不阻塞工作流
 - **端口自动检测**：使用 `get-port` 包，配置端口被占用时自动查找可用端口
@@ -182,11 +183,20 @@ NOTIFICATION_WAIT=false
 
 ## 核心实现细节
 
+### ConfigManager 类（`src/shared/config-manager.ts`）
+
+- 管理配置的优先级合并：**请求数据 > 环境变量 > 配置文件 > 默认值**
+- **声音映射**：根据通知类型（`question`/`error`/`stop`/`success`/`info`）选择对应声音
+- **图标解析**：使用 `resolveIconPath()` 处理相对路径、绝对路径、URL
+- **配置来源**：
+  - `fileConfig`：从配置文件读取（`~/.mac-notify/master.json`）
+  - `envConfig`：从环境变量读取（`.env` 或系统环境变量）
+  - `requestData`：从 HTTP 请求参数读取
+
 ### Notifier 类（`src/master/notifier.ts`）
 
-- 封装 `node-notifier`，支持自定义声音、图标、超时
-- **声音映射**：`question → Ping`, `error → Basso`, `stop → Glass`, `success/info → default`
-- **图标解析**：`resolveIconPath()` 处理相对路径（项目根目录）、绝对路径、URL
+- **无状态工具类**：只负责调用 `node-notifier` 发送通知
+- 不处理配置合并逻辑，所有配置由 `ConfigManager` 预处理
 - **错误处理**：Fire-and-forget 策略，记录错误但不抛出异常
 
 ### 安装流程（`src/agent/installer.ts`）
@@ -210,6 +220,7 @@ NOTIFICATION_WAIT=false
 Prompt Hook 告诉 AI 发送通知
   ↓ AI 提取项目信息并构造 HTTP 请求
 HTTP POST → Master 服务 (/notify)
+  ↓ ConfigManager.merge()（合并配置）
   ↓ Notifier.send()（异步，不等待结果）
 node-notifier 发送系统通知
   ↓ 立即返回 200（fire-and-forget）

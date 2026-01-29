@@ -2,7 +2,7 @@ import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import getPort from 'get-port';
 import { config } from '../config';
-import { readMasterConfig } from '../master/config';
+import { ConfigManager } from '../shared/config-manager';
 import { Notifier } from '../master/notifier';
 import type { NotifyRequest } from '../shared/types';
 
@@ -23,16 +23,13 @@ export async function startMaster(): Promise<void> {
     },
   });
 
-  // 创建 Notifier 实例
-  const notifier = new Notifier({
-    soundQuestion: config.notification.soundQuestion,
-    soundError: config.notification.soundError,
-    soundDefault: config.notification.soundDefault,
-    icon: config.notification.icon,
-    subtitle: config.notification.subtitle,
-    timeout: config.notification.timeout,
-    wait: config.notification.wait,
-  });
+  // 创建 ConfigManager 实例
+  const masterConfig = await ConfigManager.readMaster();
+  const fileConfig = masterConfig?.notification || {};
+  const configManager = new ConfigManager(fileConfig, config.notification);
+
+  // 创建无状态 Notifier 实例
+  const notifierInstance = new Notifier();
 
   // 注册 CORS
   await fastify.register(cors, {
@@ -51,8 +48,11 @@ export async function startMaster(): Promise<void> {
       });
     }
 
+    // 合并配置
+    const options = configManager.merge(data);
+
     // 异步发送通知(不等待结果)
-    notifier.send(data, fastify.log).catch(() => {
+    notifierInstance.send(options, fastify.log).catch(() => {
       // 错误已在 notifier 中记录
     });
 
@@ -74,9 +74,9 @@ export async function startMaster(): Promise<void> {
   // 启动服务器
   try {
     // 尝试从配置文件读取
-    const masterConfig = await readMasterConfig();
-    const host = masterConfig?.host || config.server.host;
-    const preferredPort = masterConfig?.port || config.server.port;
+    const masterConfig = await ConfigManager.readMaster();
+    const host = masterConfig?.server?.host || config.server.host;
+    const preferredPort = masterConfig?.server?.port || config.server.port;
 
     // 查找可用端口
     const port = await getPort({ port: preferredPort });
@@ -91,8 +91,8 @@ export async function startMaster(): Promise<void> {
     console.log('可通过以下地址访问：');
     console.log(`http://127.0.0.1:${port}`);
 
-    if (masterConfig?.url) {
-      console.log(`   - ${masterConfig.url}`);
+    if (masterConfig?.server?.url) {
+      console.log(`   - ${masterConfig.server.url}`);
     }
 
     // 如果端口变化，提示用户更新 agent 配置
