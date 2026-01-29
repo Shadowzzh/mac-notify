@@ -1,12 +1,21 @@
 {
-  "name": "mac-notify",
-  "version": "1.0.0",
+  "name": "@zhangziheng/mac-notify",
+  "version": "0.0.1",
   "description": "Claude Code notification system - unified CLI tool for master and agent",
   "main": "dist/cli.js",
   "type": "module",
   "bin": {
     "mac-notify": "./bin/mac-notify.js"
   },
+  "files": ["dist", "bin", "assets", "scripts", "README.md", "LICENSE"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shadowzzh/mac-notify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Shadowzzh/mac-notify/issues"
+  },
+  "homepage": "https://github.com/Shadowzzh/mac-notify#readme",
   "scripts": {
     "dev": "tsx src/cli.ts",
     "dev:master": "tsx watch src/commands/start.ts",
@@ -19,7 +28,9 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
-    "all": "pnpm format && pnpm typecheck && pnpm lint"
+    "all": "pnpm format && pnpm typecheck && pnpm lint",
+    "prepublishOnly": "npm run all && npm run build:prod",
+    "prepack": "npm run build:prod"
   },
   "keywords": ["claude", "notification", "fastify", "cli"],
   "author": "",

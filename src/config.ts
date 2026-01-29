@@ -67,7 +67,7 @@ export const config = {
     /** 通知超时时间（秒） */
     timeout: process.env.NOTIFICATION_TIMEOUT
       ? Number.parseInt(process.env.NOTIFICATION_TIMEOUT, 10)
-      : undefined,
+      : 5,
     /** 是否等待用户交互 */
     wait: process.env.NOTIFICATION_WAIT === 'true',
   },
