@@ -5,15 +5,29 @@
 
 /**
  * 通知请求接口
+ * 扩展自 node-notifier 的选项，支持覆盖默认配置
  */
 export interface NotifyRequest {
+  // 必需字段
   title: string;
   message: string;
-  project: string;
-  cwd: string;
-  type: 'question' | 'success' | 'error' | 'info';
-  timestamp?: string;
-  action?: 'focus' | 'none';
+  type: 'question' | 'success' | 'error' | 'info' | 'stop';
+
+  // 可选字段 - 覆盖配置默认值
+  cwd?: string;
+  subtitle?: string;
+  sound?: string;
+  icon?: string;
+  contentImage?: string;
+  timeout?: number;
+  wait?: boolean;
+
+  // node-notifier 高级选项
+  open?: string;
+  closeLabel?: string;
+  actions?: string | string[];
+  dropdownLabel?: string;
+  reply?: boolean;
 }
 
 /**

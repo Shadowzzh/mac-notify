@@ -32,6 +32,7 @@ const SOUND_MAP = {
   error: 'Basso',
   success: 'default',
   info: 'default',
+  stop: 'Glass',
 } as const;
 
 /**
@@ -71,33 +72,46 @@ export class Notifier {
    * 发送系统通知（使用 node-notifier）
    */
   async send(data: NotifyRequest, logger?: Logger): Promise<void> {
-    const { title, message, type, cwd } = data;
-    const sound = this.getSound(type);
-    const iconPath = resolveIconPath(this.config.icon);
-    const contentImagePath = resolveIconPath(this.config.contentImage);
+    const { title, message, type, cwd, ...advancedOptions } = data;
+
+    // 优先使用请求参数，回退到配置默认值
+    const notifyOptions = {
+      title,
+      message,
+      // subtitle: 请求参数 > 配置 > cwd
+      subtitle: advancedOptions.subtitle || this.config.subtitle || cwd,
+      // sound: 请求参数 > 类型映射 > 配置默认值
+      sound: advancedOptions.sound || this.getSound(type),
+      // icon: 请求参数 > 配置
+      icon: advancedOptions.icon
+        ? resolveIconPath(advancedOptions.icon)
+        : resolveIconPath(this.config.icon),
+      // contentImage: 请求参数 > 配置
+      contentImage: advancedOptions.contentImage
+        ? resolveIconPath(advancedOptions.contentImage)
+        : resolveIconPath(this.config.contentImage),
+      // timeout: 请求参数 > 配置
+      timeout: advancedOptions.timeout ?? this.config.timeout,
+      // wait: 请求参数 > 配置
+      wait: advancedOptions.wait ?? this.config.wait,
+      // 高级选项直接传递
+      open: advancedOptions.open,
+      closeLabel: advancedOptions.closeLabel,
+      actions: advancedOptions.actions,
+      dropdownLabel: advancedOptions.dropdownLabel,
+      reply: advancedOptions.reply,
+    };
 
     try {
       // 使用 Promise 包装 node-notifier 的回调
       await new Promise<void>((resolve, reject) => {
-        notifier.notify(
-          {
-            title,
-            message,
-            subtitle: this.config.subtitle || cwd,
-            sound,
-            icon: iconPath,
-            contentImage: contentImagePath,
-            timeout: this.config.timeout,
-            wait: this.config.wait,
-          },
-          (error, response) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          },
-        );
+        notifier.notify(notifyOptions, (error, response) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
       });
 
       logger?.info({ data }, 'Notification sent successfully');

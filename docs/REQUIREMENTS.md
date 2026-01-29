@@ -64,21 +64,39 @@
 {
   "title": "项目名称",
   "message": "通知消息内容",
-  "project": "/完整/项目/路径",
-  "cwd": "项目目录名（最后一级）",
-  "type": "question | success | error | info"
+  "type": "question | success | error | info | stop",
+  "cwd": "项目目录名（可选）",
+  "subtitle": "副标题（可选，覆盖配置）",
+  "sound": "声音名称（可选，覆盖类型默认）",
+  "timeout": 5,
+  "wait": false
 }
 ```
 
 ### 字段说明
 
+#### 必需字段
+
 | 字段 | 类型 | 说明 | 示例 |
 |------|------|------|------|
-| title | string | 通知标题，通常是项目名称 | "claude-hook-notify" |
+| title | string | 通知标题 | "claude-hook-notify" |
 | message | string | 通知消息内容 | "有问题需要回答" |
-| project | string | 项目完整路径 | "/Users/zzh/Documents/code/github/claude-hook-notify" |
-| cwd | string | 当前工作目录名（最后一级） | "claude-hook-notify" |
-| type | string | 通知类型 | "question" / "success" / "error" / "info" |
+| type | string | 通知类型 | "question" / "success" / "error" / "info" / "stop" |
+
+#### 可选字段（覆盖配置默认值）
+
+| 字段 | 类型 | 说明 | 示例 |
+|------|------|------|------|
+| cwd | string | 当前工作目录名（用作 subtitle 后备） | "claude-hook-notify" |
+| subtitle | string | 副标题（覆盖配置） | "重要通知" |
+| sound | string | 声音名称（覆盖类型默认） | "Ping" / "Basso" / "Glass" |
+| icon | string | 图标路径（覆盖配置） | "/path/to/icon.png" |
+| contentImage | string | 内容图片路径（覆盖配置） | "/path/to/image.png" |
+| timeout | number | 通知超时时间（秒） | 5 |
+| wait | boolean | 是否等待用户交互 | false |
+| open | string | 点击时打开的 URL | "https://example.com" |
+| actions | array | 操作按钮列表 | ["查看", "忽略"] |
+| reply | boolean | 是否允许用户回复 | true |
 
 ### 响应格式
 
@@ -115,7 +133,6 @@ Prompt 需要让 AI 能够：
 
 重要：你需要从当前工作目录中提取项目信息：
 - cwd: 当前工作目录的最后一级目录名
-- project: 完整路径
 - title: 项目名称
 - message: 描述具体问题
 - type: 设置为 'question'

@@ -64,11 +64,8 @@ curl -X POST http://100.103.79.86:8079/notify \
   -d '{
     "title": "测试项目",
     "message": "这是一条测试通知",
-    "project": "/Users/test/project",
     "cwd": "project",
-    "type": "question",
-    "timestamp": "2026-01-27T10:30:00Z",
-    "action": "focus"
+    "type": "question"
   }'
 ```
 
