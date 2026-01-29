@@ -1,7 +1,7 @@
 import prompts from 'prompts';
+import { ConfigManager } from '../shared/config-manager';
 import { checkMasterHealth } from '../shared/health';
 import type { AgentConfig, AgentInstallOptions } from '../shared/types';
-import { writeAgentConfig } from './config';
 import { generateHookConfig } from './hooks';
 import {
   backupClaudeSettings,
@@ -57,7 +57,7 @@ export async function installAgent(options: AgentInstallOptions): Promise<void> 
     masterUrl,
     autoUpdate,
   };
-  await writeAgentConfig(agentConfig);
+  await ConfigManager.writeAgent(agentConfig);
   console.log('✅ 配置已保存到 ~/.mac-notify/agent.json\n');
 
   console.log('✅ 安装完成！\n');

@@ -1,6 +1,46 @@
 import { z } from 'zod';
 
 // ============================================================
+// 0. node-notifier 类型
+// ============================================================
+
+/**
+ * 通知选项类型
+ * 兼容 node-notifier 的所有平台通知选项
+ */
+export interface NotificationOptions {
+  /** 必需字段 */
+  title: string;
+  message: string;
+
+  /** 可选字段 - 通用 */
+  /** 应用图标路径（macOS 可能不生效） */
+  icon?: string;
+  /** 是否等待用户交互 */
+  wait?: boolean;
+
+  /** 可选字段 - macOS NotificationCenter */
+  /** 通知声音 */
+  sound?: string | boolean;
+  /** 通知副标题 */
+  subtitle?: string;
+  /** 通知内容图片路径 */
+  contentImage?: string;
+  /** 点击通知时打开的 URL */
+  open?: string;
+  /** 通知超时时间（秒），false 表示立即关闭 */
+  timeout?: number | false;
+  /** 关闭按钮的标签文本 */
+  closeLabel?: string;
+  /** 操作按钮，可以是字符串或字符串数组 */
+  actions?: string | string[];
+  /** 下拉菜单的标签文本 */
+  dropdownLabel?: string;
+  /** 是否允许用户回复 */
+  reply?: boolean;
+}
+
+// ============================================================
 // 1. 枚举类型
 // ============================================================
 
@@ -242,6 +282,8 @@ export interface NotifierConfig {
   soundQuestion?: string;
   /** error 类型通知的声音 */
   soundError?: string;
+  /** stop 类型通知的声音 */
+  soundStop?: string;
   /** success/info 类型通知的默认声音 */
   soundDefault?: string;
   /** 自定义通知图标路径（本地路径或 URL） */
@@ -337,21 +379,41 @@ export const EnvConfigSchema = z.object({
  * 存储在 ~/.mac-notify/master.json 的配置
  */
 export interface MasterConfig {
-  /** 监听地址 */
-  host: string;
-  /** 监听端口 */
-  port: number;
-  /** 完整的服务 URL（自动计算） */
-  url: string;
+  /** 服务器配置 */
+  server: {
+    /** 监听地址 */
+    host: string;
+    /** 监听端口 */
+    port: number;
+    /** 完整的服务 URL（自动计算） */
+    url: string;
+  };
+  /** 通知配置（可选，覆盖环境变量默认值） */
+  notification?: NotifierConfig;
 }
 
 /**
  * Zod Schema: Master 配置验证
  */
 export const MasterConfigSchema = z.object({
-  host: z.string(),
-  port: z.number().min(1).max(65535),
-  url: z.string().url(),
+  server: z.object({
+    host: z.string(),
+    port: z.number().min(1).max(65535),
+    url: z.string().url(),
+  }),
+  notification: z
+    .object({
+      soundQuestion: z.string().optional(),
+      soundError: z.string().optional(),
+      soundStop: z.string().optional(),
+      soundDefault: z.string().optional(),
+      icon: z.string().optional(),
+      contentImage: z.string().optional(),
+      subtitle: z.string().optional(),
+      timeout: z.number().optional(),
+      wait: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 /**

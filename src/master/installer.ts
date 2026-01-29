@@ -1,8 +1,8 @@
 import prompts from 'prompts';
 import { config } from '../config';
+import { ConfigManager } from '../shared/config-manager';
 import type { MasterConfig, MasterInstallOptions } from '../shared/types';
 import { formatUrl } from '../shared/utils';
-import { writeMasterConfig } from './config';
 
 /**
  * 安装 Master 服务
@@ -14,7 +14,7 @@ export async function installMaster(options: MasterInstallOptions): Promise<void
   const config = await getMasterConfig(options);
 
   // 2. 保存配置
-  await writeMasterConfig(config);
+  await ConfigManager.writeMaster(config);
   console.log('✅ 配置已保存到 ~/.mac-notify/master.json\n');
 
   // 3. 显示启动说明
@@ -51,7 +51,13 @@ async function getMasterConfig(options: MasterInstallOptions): Promise<MasterCon
 
   const url = formatUrl(host, port);
 
-  return { host, port, url };
+  return {
+    server: {
+      host,
+      port,
+      url,
+    },
+  };
 }
 
 /**
@@ -65,6 +71,6 @@ function showStartInstructions(config: MasterConfig): void {
   console.log('   $ npm run start:server\n');
   console.log('   方式 3：开发模式（热重载）');
   console.log('   $ npm run dev:server\n');
-  console.log(`📌 服务将运行在: ${config.url}`);
+  console.log(`📌 服务将运行在: ${config.server.url}`);
   console.log('📌 配置文件位置: ~/.mac-notify/master.json\n');
 }
