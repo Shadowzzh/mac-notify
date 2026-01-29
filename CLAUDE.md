@@ -18,7 +18,7 @@
 ### Master 服务 (`src/server.ts`)
 
 - 单文件 Fastify 服务器，监听 `http://100.103.79.86:8079`
-- **POST /notify**：接收通知请求，通过 osascript 发送 macOS 通知
+- **POST /notify**：接收通知请求，通过 node-notifier 发送 macOS 通知
 - **GET /health**：健康检查端点
 - **Fire-and-forget 策略**：始终立即返回 200，通知失败不阻塞工作流
 
@@ -37,7 +37,7 @@
 Prompt Hook 告诉 AI 发送通知
   ↓ AI 提取项目信息并构造 HTTP 请求
 HTTP POST → Master 服务 (/notify)
-  ↓ 通过 osascript 发送
+  ↓ 通过 node-notifier 发送
 macOS 系统通知
 ```
 
@@ -75,16 +75,25 @@ npm run all          # 运行 format + typecheck + lint
 2. **零代码 agent**：利用 Claude Code 的 Prompt Hooks，而非编写独立的 agent 代码。
 3. **极简主义**：选择 HTTP 接口而非 SSH/SFTP，易于使用且可靠。
 4. **配置即代码**：Agent 行为通过 Claude 的 hook 系统控制，而非编译代码。
-5. **macOS 优先**：使用 osascript 发送通知；可扩展到 Linux（notify-send）或 Windows（PowerShell）。
+5. **跨平台支持**：使用 node-notifier npm 包，自动处理 macOS/Windows/Linux 的通知差异。
 
 ## 配置
 
 ### Master 服务
 
-编辑 `src/server.ts:93-94` 修改主机/端口：
-```typescript
-const host = '100.103.79.86';  // 你的 IP
-const port = 8079;              // 你的端口
+通过环境变量配置服务（参考 `.env.example`）：
+
+```bash
+# 服务器配置
+HOST=0.0.0.0
+PORT=8079
+
+# 通知图标配置
+# icon: 应用图标（macOS 通知中心通常会强制使用发送应用的图标，此参数可能不生效）
+NOTIFICATION_ICON=./assets/icons/claude.png
+
+# contentImage: 通知内容图片（推荐使用，会在通知右侧显示）
+NOTIFICATION_CONTENT_IMAGE=./assets/icons/claude.png
 ```
 
 ### Agent Hooks

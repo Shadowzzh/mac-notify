@@ -175,7 +175,7 @@ Prompt 需要让 AI 能够：
 
 ### Master
 - **框架：** Fastify
-- **通知：** osascript (macOS)
+- **通知：** node-notifier (跨平台)
 - **语言：** TypeScript / Node.js
 
 ### Agent

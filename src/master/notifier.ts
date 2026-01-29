@@ -1,8 +1,6 @@
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
+import notifier from 'node-notifier';
 import type { NotifyRequest } from '../shared/types';
-
-const execAsync = promisify(exec);
+import { resolveIconPath } from './utils';
 
 /**
  * 通知配置
@@ -11,6 +9,11 @@ export interface NotifierConfig {
   soundQuestion?: string;
   soundError?: string;
   soundDefault?: string;
+  icon?: string;
+  contentImage?: string;
+  subtitle?: string;
+  timeout?: number;
+  wait?: boolean;
 }
 
 /**
@@ -32,16 +35,21 @@ const SOUND_MAP = {
 } as const;
 
 /**
- * Notifier 类 - 负责发送系统通知
+ * Notifier 类 - 负责发送系统通知（使用 node-notifier）
  */
 export class Notifier {
-  private config: Required<NotifierConfig>;
+  private config: NotifierConfig;
 
   constructor(config: NotifierConfig = {}) {
     this.config = {
       soundQuestion: config.soundQuestion || SOUND_MAP.question,
       soundError: config.soundError || SOUND_MAP.error,
       soundDefault: config.soundDefault || SOUND_MAP.success,
+      icon: config.icon,
+      contentImage: config.contentImage,
+      subtitle: config.subtitle,
+      timeout: config.timeout || 5,
+      wait: config.wait ?? false,
     };
   }
 
@@ -51,41 +59,47 @@ export class Notifier {
   private getSound(type: NotifyRequest['type']): string {
     switch (type) {
       case 'error':
-        return this.config.soundError;
+        return this.config.soundError || SOUND_MAP.error;
       case 'question':
-        return this.config.soundQuestion;
+        return this.config.soundQuestion || SOUND_MAP.question;
       default:
-        return this.config.soundDefault;
+        return this.config.soundDefault || SOUND_MAP.success;
     }
   }
 
   /**
-   * 转义 AppleScript 字符串中的特殊字符
-   */
-  private escapeAppleScript(str: string): string {
-    return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
-  }
-
-  /**
-   * 生成 AppleScript 脚本
-   */
-  private generateScript(title: string, message: string, sound: string): string {
-    const escapedTitle = this.escapeAppleScript(title);
-    const escapedMessage = this.escapeAppleScript(message);
-
-    return `display notification "${escapedMessage}" with title "${escapedTitle}" sound name "${sound}"`;
-  }
-
-  /**
-   * 发送 macOS 通知
+   * 发送系统通知（使用 node-notifier）
    */
   async send(data: NotifyRequest, logger?: Logger): Promise<void> {
-    const { title, message, type } = data;
+    const { title, message, type, cwd } = data;
     const sound = this.getSound(type);
-    const script = this.generateScript(title, message, sound);
+    const iconPath = resolveIconPath(this.config.icon);
+    const contentImagePath = resolveIconPath(this.config.contentImage);
 
     try {
-      await execAsync(`osascript -e '${script}'`);
+      // 使用 Promise 包装 node-notifier 的回调
+      await new Promise<void>((resolve, reject) => {
+        notifier.notify(
+          {
+            title,
+            message,
+            subtitle: this.config.subtitle || cwd,
+            sound,
+            icon: iconPath,
+            contentImage: contentImagePath,
+            timeout: this.config.timeout,
+            wait: this.config.wait,
+          },
+          (error, response) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          },
+        );
+      });
+
       logger?.info({ data }, 'Notification sent successfully');
     } catch (error) {
       // Fire-and-forget 策略：记录错误但不抛出异常

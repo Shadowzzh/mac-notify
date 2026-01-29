@@ -54,7 +54,7 @@ export const config = {
   },
 
   /**
-   * 通知声音配置
+   * 通知配置
    */
   notification: {
     /** question 类型通知的声音 */
@@ -63,5 +63,17 @@ export const config = {
     soundError: process.env.NOTIFICATION_SOUND_ERROR,
     /** success/info 类型通知的声音 */
     soundDefault: process.env.NOTIFICATION_SOUND_DEFAULT,
+    /** 自定义通知图标（应用图标，本地路径或 URL） */
+    icon: process.env.NOTIFICATION_ICON,
+    /** 自定义通知内容图片（通知右侧显示的图片，本地路径或 URL） */
+    contentImage: process.env.NOTIFICATION_CONTENT_IMAGE,
+    /** 通知副标题 */
+    subtitle: process.env.NOTIFICATION_SUBTITLE,
+    /** 通知超时时间（秒） */
+    timeout: process.env.NOTIFICATION_TIMEOUT
+      ? Number.parseInt(process.env.NOTIFICATION_TIMEOUT, 10)
+      : undefined,
+    /** 是否等待用户交互 */
+    wait: process.env.NOTIFICATION_WAIT === 'true',
   },
 } as const;
