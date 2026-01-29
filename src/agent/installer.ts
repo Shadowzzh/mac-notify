@@ -1,5 +1,6 @@
 import prompts from 'prompts';
 import { checkMasterHealth } from '../shared/health';
+import type { AgentConfig, AgentInstallOptions } from '../shared/types';
 import { writeAgentConfig } from './config';
 import { generateHookConfig } from './hooks';
 import {
@@ -9,7 +10,6 @@ import {
   readClaudeSettings,
   writeClaudeSettings,
 } from './settings';
-import type { AgentConfig, AgentInstallOptions } from './types';
 
 /**
  * 安装 Agent hooks

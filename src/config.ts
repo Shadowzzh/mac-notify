@@ -1,23 +1,18 @@
 import { config as loadEnv } from 'dotenv';
+import { LogLevel } from './shared/types.js';
 
 // 加载 .env 文件
 loadEnv();
 
 /**
- * 日志级别枚举
- */
-const LOG_LEVELS = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] as const;
-type LogLevel = (typeof LOG_LEVELS)[number];
-
-/**
  * 验证日志级别
  */
 function validateLogLevel(level: string): LogLevel {
-  if (LOG_LEVELS.includes(level as LogLevel)) {
+  if (Object.values(LogLevel).includes(level as LogLevel)) {
     return level as LogLevel;
   }
   console.warn(`Invalid LOG_LEVEL: ${level}, using default: info`);
-  return 'info';
+  return LogLevel.Info;
 }
 
 /**

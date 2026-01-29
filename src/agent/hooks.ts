@@ -1,11 +1,12 @@
-import type { ClaudeHookMatcher } from './types';
+import { HookMatcherType } from '../shared/types';
+import type { ClaudeHookMatcher } from '../shared/types';
 
 /**
  * 生成 Claude Code Hook 配置
  */
 export function generateHookConfig(masterUrl: string): ClaudeHookMatcher {
   return {
-    matcher: 'AskUserQuestion',
+    matcher: HookMatcherType.AskUserQuestion,
     hooks: [
       {
         type: 'prompt',

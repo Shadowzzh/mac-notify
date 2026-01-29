@@ -1,8 +1,8 @@
 import prompts from 'prompts';
 import { config } from '../config';
+import type { MasterConfig, MasterInstallOptions } from '../shared/types';
 import { formatUrl } from '../shared/utils';
 import { writeMasterConfig } from './config';
-import type { MasterConfig, MasterInstallOptions } from './types';
 
 /**
  * 安装 Master 服务
