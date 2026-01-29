@@ -28,6 +28,10 @@ export async function startMaster(): Promise<void> {
     soundQuestion: config.notification.soundQuestion,
     soundError: config.notification.soundError,
     soundDefault: config.notification.soundDefault,
+    icon: config.notification.icon,
+    subtitle: config.notification.subtitle,
+    timeout: config.notification.timeout,
+    wait: config.notification.wait,
   });
 
   // 注册 CORS

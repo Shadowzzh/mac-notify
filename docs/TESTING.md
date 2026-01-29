@@ -202,24 +202,28 @@ curl -X POST http://100.103.79.86:8079/notify \
 
 1. 检查 macOS 通知权限:
 ```
-系统设置 -> 通知 -> Script Editor
+系统设置 -> 通知 -> Node
 确保允许通知
 ```
 
-2. 测试 osascript 是否正常:
+2. 测试 node-notifier 是否正常:
 ```bash
-osascript -e 'display notification "测试" with title "测试标题"'
+# 发送测试通知
+curl -X POST http://127.0.0.1:8079/notify \
+  -H "Content-Type: application/json" \
+  -d '{"title":"测试","message":"测试消息","project":"/test","cwd":"test","type":"info"}'
 ```
 
 3. 检查 Master 服务日志:
 ```bash
-# 查看是否有 osascript 错误
+# 查看是否有通知发送错误
 ```
 
 **解决方案:**
-- 启用 Script Editor 的通知权限
+- 启用 Node 的通知权限
 - 检查"勿扰模式"是否开启
 - 重启 Master 服务
+- 确保 node-notifier 已正确安装: `npm install`
 
 ### 问题 4: settings.json 自动更新失败
 

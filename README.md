@@ -20,9 +20,9 @@
 │  ↓              │                    │  ↓              │
 │  AskUserQuestion│  ──HTTP POST──→   │  /notify        │
 │  (Prompt Hook)  │                    │  ↓              │
-│                 │                    │  osascript      │
+│                 │                    │  node-notifier  │
 │                 │                    │  ↓              │
-│                 │                    │  macOS 通知     │
+│                 │                    │  系统通知       │
 └─────────────────┘                    └─────────────────┘
 ```
 
@@ -139,6 +139,49 @@ const host = '100.103.79.86';  // 修改为你的 IP
 const port = 8079;              // 修改端口
 ```
 
+#### 自定义通知图标
+
+通知系统使用 `node-notifier`，支持自定义图标。在创建 `Notifier` 实例时传入配置：
+
+```typescript
+import { Notifier } from './master/notifier';
+
+const notifier = new Notifier({
+  // 自定义应用图标（macOS 通知中心通常会强制使用发送应用的图标，此参数可能不生效）
+  icon: '/path/to/icon.png',
+
+  // 自定义通知内容图片（推荐使用此参数，会在通知右侧显示图片）
+  contentImage: '/path/to/icon.png',
+  // 或使用 URL
+  // contentImage: 'https://example.com/icon.png',
+
+  // 自定义副标题（默认显示项目目录）
+  subtitle: 'Claude Code',
+
+  // 通知超时时间（秒，默认 5）
+  timeout: 10,
+
+  // 是否等待用户交互（默认 false）
+  wait: false,
+
+  // 自定义声音
+  soundQuestion: 'Ping',
+  soundError: 'Basso',
+  soundDefault: 'default',
+});
+```
+
+**图标格式支持：**
+- **macOS**: PNG, ICNS
+- **Windows**: PNG, ICO (< 1024x1024, < 200KB)
+- **Linux**: PNG, JPG
+
+**路径格式：**
+- 相对路径（推荐）：`./assets/icons/claude.png`（相对于项目根目录）
+- 绝对路径：`/Users/username/icon.png`
+- HTTP/HTTPS URL：`https://example.com/icon.png`（自动下载缓存）
+- 推荐尺寸：256x256 或 512x512 像素
+
 ### Agent 配置
 
 配置文件位置: `~/.claude/settings.json`
@@ -212,7 +255,7 @@ A: 开发模式下日志直接输出到终端。生产模式使用 LaunchAgent �
 
 ### Q: 支持其他操作系统吗？
 
-A: 目前只支持 macOS（使用 osascript）。Linux 可以修改为使用 notify-send，Windows 可以使用 PowerShell。
+A: 支持！使用 node-notifier 自动适配 macOS、Windows 和 Linux 的系统通知。
 
 ## 相关文档
 
@@ -223,7 +266,7 @@ A: 目前只支持 macOS（使用 osascript）。Linux 可以修改为使用 not
 
 ## 技术栈
 
-- **Master 服务**: Fastify + TypeScript + osascript
+- **Master 服务**: Fastify + TypeScript + node-notifier
 - **Agent 端**: Bash + Python 3 + Claude Code Hooks
 - **网络**: Tailscale (内网穿透)
 
