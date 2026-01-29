@@ -84,13 +84,23 @@ claude-hook-notify/
 {
   "title": "项目名称",
   "message": "通知消息",
-  "project": "/完整/项目/路径",
-  "cwd": "项目目录名",
-  "type": "question | success | error | info",
-  "timestamp": "2026-01-27T10:30:00Z",
-  "action": "focus | none"
+  "type": "question | success | error | info | stop",
+  "cwd": "项目目录名（可选）",
+  "subtitle": "副标题（可选，覆盖配置）",
+  "sound": "自定义声音（可选，覆盖类型默认）",
+  "icon": "图标路径（可选，覆盖配置）",
+  "contentImage": "内容图片路径（可选，覆盖配置）",
+  "timeout": 5,
+  "wait": false,
+  "open": "点击时打开的 URL（可选）",
+  "actions": ["操作1", "操作2"]
 }
 ```
+
+**字段说明:**
+- **必需字段**: `title`, `message`, `type`
+- **可选字段**: 所有其他字段都是可选的，会覆盖配置文件中的默认值
+- **参数优先级**: 请求参数 > 配置文件 > 默认值
 
 **响应:**
 ```json
@@ -167,6 +177,7 @@ const notifier = new Notifier({
   // 自定义声音
   soundQuestion: 'Ping',
   soundError: 'Basso',
+  soundStop: 'Glass',
   soundDefault: 'default',
 });
 ```

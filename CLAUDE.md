@@ -121,6 +121,7 @@ LOG_LEVEL=info
 # 通知声音
 NOTIFICATION_SOUND_QUESTION=Ping
 NOTIFICATION_SOUND_ERROR=Basso
+NOTIFICATION_SOUND_STOP=Glass
 NOTIFICATION_SOUND_DEFAULT=default
 
 # 通知图标
@@ -184,7 +185,7 @@ NOTIFICATION_WAIT=false
 ### Notifier 类（`src/master/notifier.ts`）
 
 - 封装 `node-notifier`，支持自定义声音、图标、超时
-- **声音映射**：`question → Ping`, `error → Basso`, `success/info → default`
+- **声音映射**：`question → Ping`, `error → Basso`, `stop → Glass`, `success/info → default`
 - **图标解析**：`resolveIconPath()` 处理相对路径（项目根目录）、绝对路径、URL
 - **错误处理**：Fire-and-forget 策略，记录错误但不抛出异常
 
@@ -223,13 +224,26 @@ node-notifier 发送系统通知
 {
   "title": "项目名称",
   "message": "通知消息",
-  "project": "/完整/项目/路径",
-  "cwd": "项目目录名",
-  "type": "question | success | error | info",
-  "timestamp": "2026-01-27T10:30:00Z",
-  "action": "focus | none"
+  "type": "question | success | error | info | stop",
+  "cwd": "项目目录名（可选，用作 subtitle 后备）",
+  "subtitle": "副标题（可选，覆盖配置和 cwd）",
+  "sound": "声音名称（可选，覆盖类型默认声音）",
+  "icon": "图标路径（可选，覆盖配置）",
+  "contentImage": "内容图片路径（可选，覆盖配置）",
+  "timeout": 5,
+  "wait": false,
+  "open": "点击时打开的 URL（可选）",
+  "closeLabel": "关闭按钮标签（可选）",
+  "actions": ["操作1", "操作2"],
+  "dropdownLabel": "下拉菜单标签（可选）",
+  "reply": false
 }
 ```
+
+**参数说明：**
+- **必需字段**：`title`, `message`, `type`
+- **可选字段**：所有其他字段都是可选的，会覆盖配置文件中的默认值
+- **参数优先级**：请求参数 > 配置文件默认值 > 内置默认值
 
 **响应：**
 ```json
@@ -242,6 +256,7 @@ node-notifier 发送系统通知
 **按类型区分的通知声音：**
 - `error`：Basso
 - `question`：Ping
+- `stop`：Glass
 - `success`/`info`：default
 
 ## 工具脚本

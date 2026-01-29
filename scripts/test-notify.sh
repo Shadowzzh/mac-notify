@@ -86,10 +86,8 @@ test_endpoint \
   '{
     "title": "测试问题",
     "message": "这是一个测试问题通知",
-    "project": "/Users/test/project",
     "cwd": "project",
-    "type": "question",
-    "timestamp": "'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'"
+    "type": "question"
   }' \
   "200"
 
@@ -101,10 +99,8 @@ test_endpoint \
   '{
     "title": "测试成功",
     "message": "这是一个测试成功通知",
-    "project": "/Users/test/project",
     "cwd": "project",
-    "type": "success",
-    "timestamp": "'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'"
+    "type": "success"
   }' \
   "200"
 
@@ -116,10 +112,8 @@ test_endpoint \
   '{
     "title": "测试错误",
     "message": "这是一个测试错误通知",
-    "project": "/Users/test/project",
     "cwd": "project",
-    "type": "error",
-    "timestamp": "'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'"
+    "type": "error"
   }' \
   "200"
 
@@ -131,10 +125,8 @@ test_endpoint \
   '{
     "title": "测试信息",
     "message": "这是一个测试信息通知",
-    "project": "/Users/test/project",
     "cwd": "project",
-    "type": "info",
-    "timestamp": "'"$(date -u +"%Y-%m-%dT%H:%M:%SZ")"'"
+    "type": "info"
   }' \
   "200"
 
