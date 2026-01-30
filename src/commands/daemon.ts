@@ -44,12 +44,12 @@ export async function handleDaemon(action: string, options: DaemonInstallOptions
         break;
 
       default:
-        console.error(`❌ 未知的操作: ${action}`);
+        console.error(`错误: 未知的操作: ${action}`);
         console.log('可用操作: install, start, stop, restart, status, logs, uninstall');
         process.exit(1);
     }
   } catch (error) {
-    console.error(`❌ ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`错误: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
   }
 }
@@ -60,7 +60,7 @@ export async function handleDaemon(action: string, options: DaemonInstallOptions
 async function showStatus(): Promise<void> {
   const status = await getDaemonStatus();
 
-  console.log('\n📊 LaunchAgent 状态：\n');
+  console.log('\nLaunchAgent 状态：\n');
   console.log(`服务标签: ${status.label}`);
   console.log(`运行状态: ${status.running ? '✓ 运行中' : '✗ 未运行'}`);
   if (status.pid) {
@@ -75,6 +75,6 @@ async function showStatus(): Promise<void> {
  */
 async function showLogs(): Promise<void> {
   const logs = await getDaemonLogs(50);
-  console.log('\n📋 最近 50 行日志：\n');
+  console.log('\n最近 50 行日志：\n');
   console.log(logs);
 }

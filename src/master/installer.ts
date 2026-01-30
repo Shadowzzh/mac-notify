@@ -8,14 +8,14 @@ import { formatUrl } from '../shared/utils';
  * 安装 Master 服务
  */
 export async function installMaster(options: MasterInstallOptions): Promise<void> {
-  console.log('🚀 开始安装 Master 服务...\n');
+  console.log('开始安装 Master 服务...\n');
 
   // 1. 获取配置
   const config = await getMasterConfig(options);
 
   // 2. 保存配置
   await ConfigManager.writeMaster(config);
-  console.log('✅ 配置已保存到 ~/.mac-notify/master.json\n');
+  console.log('✓ 配置已保存到 ~/.mac-notify/master.json\n');
 
   // 3. 显示启动说明
   showStartInstructions(config);
@@ -64,13 +64,13 @@ async function getMasterConfig(options: MasterInstallOptions): Promise<MasterCon
  * 显示启动说明
  */
 function showStartInstructions(config: MasterConfig): void {
-  console.log('📋 启动 Master 服务：\n');
+  console.log('启动 Master 服务：\n');
   console.log('   方式 1：直接启动');
   console.log('   $ mac-notify start-master\n');
   console.log('   方式 2：使用 npm 脚本');
   console.log('   $ npm run start:server\n');
   console.log('   方式 3：开发模式（热重载）');
   console.log('   $ npm run dev:server\n');
-  console.log(`📌 服务将运行在: ${config.server.url}`);
-  console.log('📌 配置文件位置: ~/.mac-notify/master.json\n');
+  console.log(`服务将运行在: ${config.server.url}`);
+  console.log('配置文件位置: ~/.mac-notify/master.json\n');
 }

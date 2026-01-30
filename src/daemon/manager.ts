@@ -17,7 +17,7 @@ export async function startDaemon(): Promise<void> {
 
   try {
     await execAsync(`launchctl start ${config.label}`);
-    console.log('✅ 服务已启动');
+    console.log('✓ 服务已启动');
   } catch (error) {
     throw new Error(`启动服务失败: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -34,7 +34,7 @@ export async function stopDaemon(): Promise<void> {
 
   try {
     await execAsync(`launchctl stop ${config.label}`);
-    console.log('✅ 服务已停止');
+    console.log('✓ 服务已停止');
   } catch (error) {
     throw new Error(`停止服务失败: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -44,7 +44,7 @@ export async function stopDaemon(): Promise<void> {
  * 重启服务
  */
 export async function restartDaemon(): Promise<void> {
-  console.log('🔄 正在重启服务...');
+  console.log('正在重启服务...');
   await stopDaemon();
   await new Promise((resolve) => setTimeout(resolve, 1000));
   await startDaemon();
@@ -114,21 +114,21 @@ export async function uninstallDaemon(): Promise<void> {
     // 1. 卸载 LaunchAgent
     try {
       await execAsync(`launchctl unload "${config.plistPath}"`);
-      console.log('✅ 已卸载 LaunchAgent');
+      console.log('✓ 已卸载 LaunchAgent');
     } catch (error) {
       // 如果服务未加载，忽略错误
-      console.log('⚠️  LaunchAgent 未加载或已卸载');
+      console.log('LaunchAgent 未加载或已卸载');
     }
 
     // 2. 删除 plist 文件
     await execAsync(`rm -f "${config.plistPath}"`);
-    console.log('✅ 已删除 plist 文件');
+    console.log('✓ 已删除 plist 文件');
 
     // 3. 删除配置文件
     await execAsync(`rm -f "${ConfigManager.getDaemonConfigPath()}"`);
-    console.log('✅ 已删除配置文件');
+    console.log('✓ 已删除配置文件');
 
-    console.log('\n✅ Daemon 卸载完成');
+    console.log('\n✓ Daemon 卸载完成');
   } catch (error) {
     throw new Error(`卸载失败: ${error instanceof Error ? error.message : String(error)}`);
   }

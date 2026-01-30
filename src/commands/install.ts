@@ -14,7 +14,7 @@ export async function handleInstall(
   } else if (type === 'agent') {
     await installAgent(options as AgentInstallOptions);
   } else {
-    console.error('❌ 无效的类型，请使用 master 或 agent');
+    console.error('错误: 无效的类型，请使用 master 或 agent');
     process.exit(1);
   }
 }

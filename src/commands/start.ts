@@ -90,7 +90,7 @@ export async function startMaster(): Promise<void> {
 
     // 如果端口变化，提示用户更新 agent 配置
     if (port !== preferredPort) {
-      console.log('\n📋 安装 agent 时请使用以下地址：');
+      console.log('\n安装 agent 时请使用以下地址：');
       console.log(`   mac-notify install agent --url http://${host}:${port}`);
     }
   } catch (err) {

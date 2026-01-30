@@ -10,20 +10,20 @@ import type { AgentConfig, AgentInstallOptions } from '../shared/types';
  * 安装 Agent hooks
  */
 export async function installAgent(options: AgentInstallOptions): Promise<void> {
-  console.log('🚀 开始安装 Agent hooks...\n');
+  console.log('开始安装 Agent hooks...\n');
 
   // 1. 获取 Master URL
   const masterUrl = await getMasterUrl(options);
 
   // 2. 健康检查
-  console.log('🔍 检查 Master 服务连接...');
+  console.log('检查 Master 服务连接...');
   const isHealthy = await checkMasterHealth(masterUrl);
 
   if (!isHealthy) {
-    console.log(`⚠️  警告: 无法连接到 Master 服务 (${masterUrl})`);
+    console.warn(`警告: 无法连接到 Master 服务 (${masterUrl})`);
     console.log('请确 Master 服务已启动并且网络可达\n');
   } else {
-    console.log('✅ Master 服务连接正常\n');
+    console.log('✓ Master 服务连接正常\n');
   }
 
   // 3. 生成 Shell 脚本
@@ -32,12 +32,12 @@ export async function installAgent(options: AgentInstallOptions): Promise<void> 
   // 4. 保存 Agent 配置（只保存 URL）
   const agentConfig: AgentConfig = { masterUrl };
   await ConfigManager.writeAgent(agentConfig);
-  console.log('✅ 配置已保存到 ~/.mac-notify/agent.json\n');
+  console.log('✓ 配置已保存到 ~/.mac-notify/agent.json\n');
 
   // 5. 输出 Hook 配置
   showHookConfigInstructions();
 
-  console.log('✅ 安装完成！\n');
+  console.log('✓ 安装完成\n');
   showVerificationSteps(masterUrl);
 }
 
@@ -72,13 +72,13 @@ async function generateHookScripts(masterUrl: string): Promise<void> {
   const askScriptPath = join(hooksDir, 'pre-askuserquestion.sh');
   const askScript = generateAskScript(masterUrl);
   writeFileSync(askScriptPath, askScript, { mode: 0o755 });
-  console.log(`✅ 已生成脚本: ${askScriptPath}`);
+  console.log(`✓ 已生成脚本: ${askScriptPath}`);
 
   // 生成任务完成通知脚本
   const stopScriptPath = join(hooksDir, 'stop.sh');
   const stopScript = generateStopScript(masterUrl);
   writeFileSync(stopScriptPath, stopScript, { mode: 0o755 });
-  console.log(`✅ 已生成脚本: ${stopScriptPath}\n`);
+  console.log(`✓ 已生成脚本: ${stopScriptPath}\n`);
 }
 
 /**
@@ -95,13 +95,13 @@ LOG_FILE="\${MAC_NOTIFY_LOG_FILE:-/tmp/mac-notify.log}"
 
 curl -X POST "\${MASTER_URL}/notify" \\
   -H "Content-Type: application/json" \\
-  -d '{
-    "title": "\${PROJECT_NAME}",
-    "message": "Claude Code 正在提问",
-    "subtitle": "\${DEVICE_NAME}",
-    "cwd": "\${PROJECT_NAME}",
-    "type": "question"
-  }' 2>&1 | tee -a "$LOG_FILE"
+  -d "{
+    \\"title\\": \\"\${PROJECT_NAME}\\",
+    \\"message\\": \\"Claude Code 正在提问\\",
+    \\"subtitle\\": \\"\${DEVICE_NAME}\\",
+    \\"cwd\\": \\"\${PROJECT_NAME}\\",
+    \\"type\\": \\"question\\"
+  }" 2>&1 | tee -a "\$LOG_FILE"
 `;
 }
 
@@ -119,13 +119,13 @@ LOG_FILE="\${MAC_NOTIFY_LOG_FILE:-/tmp/mac-notify.log}"
 
 curl -X POST "\${MASTER_URL}/notify" \\
   -H "Content-Type: application/json" \\
-  -d '{
-    "title": "\${PROJECT_NAME}",
-    "message": "Claude Code 任务完成",
-    "subtitle": "\${DEVICE_NAME}",
-    "cwd": "\${PROJECT_NAME}",
-    "type": "stop"
-  }' 2>&1 | tee -a "$LOG_FILE"
+  -d "{
+    \\"title\\": \\"\${PROJECT_NAME}\\",
+    \\"message\\": \\"Claude Code 任务完成\\",
+    \\"subtitle\\": \\"\${DEVICE_NAME}\\",
+    \\"cwd\\": \\"\${PROJECT_NAME}\\",
+    \\"type\\": \\"stop\\"
+  }" 2>&1 | tee -a "\$LOG_FILE"
 `;
 }
 
@@ -133,7 +133,7 @@ curl -X POST "\${MASTER_URL}/notify" \\
  * 显示 Hook 配置说明
  */
 function showHookConfigInstructions(): void {
-  console.log('📝 请手动添加以下配置到 ~/.claude/settings.json 的 hooks 数组中：\n');
+  console.log('请手动添加以下配置到 ~/.claude/settings.json 的 hooks 数组中：\n');
 
   const askUserQuestionHook = {
     matcher: 'AskUserQuestion',
@@ -168,7 +168,7 @@ function showHookConfigInstructions(): void {
  * 显示验证步骤
  */
 function showVerificationSteps(masterUrl: string): void {
-  console.log('📌 验证安装：\n');
+  console.log('验证安装：\n');
   console.log('1.检查生成的脚本:');
   console.log('  $ ls -la ~/.claude/hooks/\n');
 
@@ -183,7 +183,7 @@ function showVerificationSteps(masterUrl: string): void {
   console.log('  $ cat ~/.claude/settings.json | jq .\n');
 
   console.log('5.测试 Master 服务连接:');
-  console.log(`      $ curl ${masterUrl}/health\n`);
+  console.log(`  $ curl ${masterUrl}/health\n`);
 
   console.log('6.在任意项目中使用 Claude Code，触发 AskUserQuestion 或完成任务时应收到通知\n');
 }

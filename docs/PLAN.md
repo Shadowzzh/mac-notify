@@ -209,12 +209,12 @@ mac-notify/
 
 ## 成功标准
 
-1. ✅ CLI 工具可以全局安装
-2. ✅ `mac-notify install master` 成功安装并启动服务
-3. ✅ `mac-notify install agent` 成功配置 hooks
-4. ✅ 端到端通知流程正常工作
-5. ✅ 文档完整且清晰
-6. ✅ 代码通过所有检查（format、typecheck、lint）
+1. ✓ CLI 工具可以全局安装
+2. ✓ `mac-notify install master` 成功安装并启动服务
+3. ✓ `mac-notify install agent` 成功配置 hooks
+4. ✓ 端到端通知流程正常工作
+5. ✓ 文档完整且清晰
+6. ✓ 代码通过所有检查（format、typecheck、lint）
 
 ## 时间线（仅供参考）
 
