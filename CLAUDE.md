@@ -92,6 +92,38 @@ npm run all                    # format + typecheck + lint
 - **构建工具**：tsup（打包为单文件 CLI）
 - 提交代码前务必运行 `npm run all`
 
+### Emoji 使用规范
+
+本项目遵循**极简主义**原则，严格控制 emoji 的使用：
+
+**允许使用的 emoji（仅 2 个）：**
+- `✓` - 表示成功、完成、通过
+- `✗` - 表示失败、未运行、错误
+
+**禁止使用的 emoji：**
+- 所有装饰性 emoji（包括但不限于：🚀🔍⚠️📝📌📊❌🔄📋🎨🔧📦🧹✅等）
+- 所有其他功能性 emoji（使用纯文字替代）
+
+**使用示例：**
+```typescript
+// ✓ 正确
+console.log('✓ 配置已保存');
+console.log('✗ 服务未运行');
+console.warn('警告: 无法连接到服务');
+
+// ✗ 错误
+console.log('🚀 开始安装');  // 使用纯文字
+console.log('❌ 配置错误');  // 使用 console.error 或纯文字
+console.log('⚠️  警告');     // 使用 console.warn
+```
+
+**原则：**
+- 代码输出优先使用纯文字
+- 状态标记使用 ✓/✗
+- 警告使用 `console.warn()`
+- 错误使用 `console.error()`
+- 文档同样遵循此规范
+
 ## 核心设计决策
 
 1. **Fire-and-forget**：通知失败绝不阻塞 Claude Code 的工作流。服务记录错误但始终返回 200。

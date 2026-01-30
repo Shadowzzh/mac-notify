@@ -14,7 +14,7 @@ const execAsync = promisify(exec);
  * 安装 Daemon 服务
  */
 export async function installDaemon(options: DaemonInstallOptions): Promise<void> {
-  console.log('🚀 开始安装 LaunchAgent 守护进程...\n');
+  console.log('开始安装 LaunchAgent 守护进程...\n');
 
   // 1. 检查是否已安装
   const existingConfig = await ConfigManager.readDaemon();
@@ -27,7 +27,7 @@ export async function installDaemon(options: DaemonInstallOptions): Promise<void
     });
 
     if (!confirm) {
-      console.log('❌ 取消安装');
+      console.log('取消安装');
       process.exit(0);
     }
   }
@@ -42,7 +42,7 @@ export async function installDaemon(options: DaemonInstallOptions): Promise<void
   // 3. 读取 Master 配置
   const masterConfig = await ConfigManager.readMaster();
   if (!masterConfig) {
-    console.error('❌ 未找到 Master 配置，请先运行: mac-notify install master');
+    console.error('错误: 未找到 Master 配置，请先运行: mac-notify install master');
     process.exit(1);
   }
   console.log(`✓ 读取 Master 配置: ${masterConfig.server.url}`);
@@ -166,7 +166,7 @@ async function verifyService(label: string): Promise<void> {
 
     console.log(`✓ 验证服务状态: 运行中 (PID: ${pid})`);
   } catch (error) {
-    console.warn('⚠️  无法验证服务状态，请手动检查');
+    console.warn('无法验证服务状态，请手动检查');
   }
 }
 
@@ -174,12 +174,12 @@ async function verifyService(label: string): Promise<void> {
  * 显示成功信息
  */
 function showSuccessMessage(config: DaemonConfig): void {
-  console.log('\n✅ LaunchAgent 安装成功！\n');
-  console.log('📋 服务信息：');
+  console.log('\n✓ LaunchAgent 安装成功\n');
+  console.log('服务信息：');
   console.log(`   标签: ${config.label}`);
   console.log(`   日志: ${config.logPath}`);
   console.log(`   配置: ${config.plistPath}\n`);
-  console.log('📋 管理命令：');
+  console.log('管理命令：');
   console.log('   mac-notify daemon status     # 查看状态');
   console.log('   mac-notify daemon stop       # 停止服务');
   console.log('   mac-notify daemon restart    # 重启服务');
