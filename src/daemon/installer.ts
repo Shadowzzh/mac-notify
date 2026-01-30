@@ -1,8 +1,8 @@
 import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { promisify } from 'node:util';
 import prompts from 'prompts';
 import { ConfigManager } from '../shared/config-manager';
 import type { DaemonConfig, DaemonInstallOptions } from '../shared/types';

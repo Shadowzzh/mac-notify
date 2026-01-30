@@ -1,8 +1,8 @@
 import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 import { readFile } from 'node:fs/promises';
-import type { DaemonStatus } from '../shared/types';
+import { promisify } from 'node:util';
 import { ConfigManager } from '../shared/config-manager';
+import type { DaemonStatus } from '../shared/types';
 
 const execAsync = promisify(exec);
 

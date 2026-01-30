@@ -2,8 +2,8 @@ import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import getPort from 'get-port';
 import { config } from '../config';
-import { ConfigManager } from '../shared/config-manager';
 import { Notifier } from '../master/notifier';
+import { ConfigManager } from '../shared/config-manager';
 import type { NotifyRequest } from '../shared/types';
 
 /**

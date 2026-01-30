@@ -423,8 +423,6 @@ export const MasterConfigSchema = z.object({
 export interface AgentConfig {
   /** Master 服务 URL */
   masterUrl: string;
-  /** 是否自动更新 Claude settings.json */
-  autoUpdate: boolean;
 }
 
 /**
@@ -432,7 +430,6 @@ export interface AgentConfig {
  */
 export const AgentConfigSchema = z.object({
   masterUrl: z.string().url(),
-  autoUpdate: z.boolean(),
 });
 
 // ============================================================
@@ -457,8 +454,6 @@ export interface MasterInstallOptions {
 export interface AgentInstallOptions {
   /** Master 服务 URL */
   url?: string;
-  /** 是否自动更新 Claude settings.json */
-  auto?: boolean;
 }
 
 /**

@@ -37,7 +37,7 @@ npm run dev
 
 验证服务:
 ```bash
-curl http://100.103.79.86:8079/health
+curl http://localhost:8079/health
 ```
 
 ### 2. 安装 Agent（远程机器）
@@ -140,12 +140,12 @@ npm run typecheck    # TypeScript 类型检查
 ### Master 服务配置
 
 默认配置:
-- 监听地址: `100.103.79.86`
+- 监听地址: `localhost`
 - 端口: `8079`
 
 修改配置请编辑 `src/server.ts`:
 ```typescript
-const host = '100.103.79.86';  // 修改为你的 IP
+const host = 'localhost';  // 修改为你的 IP
 const port = 8079;              // 修改端口
 ```
 
