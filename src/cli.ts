@@ -2,9 +2,9 @@
 
 import './config';
 import { Command } from 'commander';
+import { handleDaemon } from './commands/daemon';
 import { handleInstall } from './commands/install';
 import { startMaster } from './commands/start';
-import { handleDaemon } from './commands/daemon';
 
 const program = new Command();
 
@@ -16,7 +16,6 @@ program
   .option('-u, --url <url>', 'Master 服务地址')
   .option('-h, --host <host>', 'Master 服务主机')
   .option('-p, --port <port>', 'Master 服务端口')
-  .option('--auto', '自动更新配置文件', false)
   .option('--force', '强制重新安装', false)
   .action(async (type: string, options: Record<string, unknown>) => {
     if (type === 'daemon') {

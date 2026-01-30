@@ -147,7 +147,7 @@ NOTIFICATION_WAIT=false
 {
   "host": "0.0.0.0",
   "port": 8079,
-  "url": "http://100.103.79.86:8079"
+  "url": "http://localhost:8079"
 }
 ```
 
@@ -156,7 +156,7 @@ NOTIFICATION_WAIT=false
 **用户配置文件**（`~/.mac-notify/agent.json`）：
 ```json
 {
-  "masterUrl": "http://100.103.79.86:8079",
+  "masterUrl": "http://localhost:8079",
   "autoUpdate": true
 }
 ```
@@ -352,7 +352,7 @@ mac-notify install agent
 
 ## 重要提示
 
-- IP 地址 `100.103.79.86` 是 Tailscale 地址 - 请根据你的网络环境修改
+- 默认使用 `localhost` - 请根据你的网络环境修改为实际 IP 或域名
 - 必须为终端/Script Editor 启用 macOS 通知权限
 - 系统设计用于内网环境 - 未实现身份验证
 - 所有错误都会被记录，但绝不会传递给客户端（fire-and-forget）

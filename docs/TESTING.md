@@ -11,7 +11,7 @@ npm run dev
 
 验证服务启动:
 ```bash
-curl http://100.103.79.86:8079/health
+curl http://localhost:8079/health
 ```
 
 预期响应:
@@ -47,7 +47,7 @@ bash /tmp/install.sh
 **目的:** 验证 Master 服务可达
 
 ```bash
-curl http://100.103.79.86:8079/health
+curl http://localhost:8079/health
 ```
 
 **预期结果:**
@@ -59,7 +59,7 @@ curl http://100.103.79.86:8079/health
 **目的:** 验证通知功能正常工作
 
 ```bash
-curl -X POST http://100.103.79.86:8079/notify \
+curl -X POST http://localhost:8079/notify \
   -H "Content-Type: application/json" \
   -d '{
     "title": "测试项目",
@@ -82,17 +82,17 @@ curl -X POST http://100.103.79.86:8079/notify \
 
 ```bash
 # 错误通知 (Basso 声音)
-curl -X POST http://100.103.79.86:8079/notify \
+curl -X POST http://localhost:8079/notify \
   -H "Content-Type: application/json" \
   -d '{"title":"错误测试","message":"发生错误","project":"/test","cwd":"test","type":"error"}'
 
 # 成功通知 (default 声音)
-curl -X POST http://100.103.79.86:8079/notify \
+curl -X POST http://localhost:8079/notify \
   -H "Content-Type: application/json" \
   -d '{"title":"成功测试","message":"操作成功","project":"/test","cwd":"test","type":"success"}'
 
 # 信息通知 (default 声音)
-curl -X POST http://100.103.79.86:8079/notify \
+curl -X POST http://localhost:8079/notify \
   -H "Content-Type: application/json" \
   -d '{"title":"信息测试","message":"普通信息","project":"/test","cwd":"test","type":"info"}'
 ```
@@ -141,7 +141,7 @@ claude
 1. 检查 Master 服务是否运行:
 ```bash
 # 在本地机器上
-curl http://100.103.79.86:8079/health
+curl http://localhost:8079/health
 ```
 
 2. 检查防火墙设置:
@@ -153,7 +153,7 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
 3. 检查 Tailscale 连接:
 ```bash
 # 在远程机器上
-ping 100.103.79.86
+ping localhost
 ```
 
 **解决方案:**
@@ -181,7 +181,7 @@ cat ~/.claude/settings.json | grep -A 10 "AskUserQuestion"
 
 3. 手动测试通知接口:
 ```bash
-curl -X POST http://100.103.79.86:8079/notify \
+curl -X POST http://localhost:8079/notify \
   -H "Content-Type: application/json" \
   -d '{"title":"test","message":"test","project":"/test","cwd":"test","type":"question"}'
 ```
@@ -256,7 +256,7 @@ ls -la ~/.claude/settings.json
 **目的:** 验证通知的响应时间
 
 ```bash
-time curl -X POST http://100.103.79.86:8079/notify \
+time curl -X POST http://localhost:8079/notify \
   -H "Content-Type: application/json" \
   -d '{"title":"延迟测试","message":"测试消息","project":"/test","cwd":"test","type":"info"}'
 ```
@@ -271,7 +271,7 @@ time curl -X POST http://100.103.79.86:8079/notify \
 
 ```bash
 for i in {1..5}; do
-  curl -X POST http://100.103.79.86:8079/notify \
+  curl -X POST http://localhost:8079/notify \
     -H "Content-Type: application/json" \
     -d "{\"title\":\"并发测试 $i\",\"message\":\"消息 $i\",\"project\":\"/test\",\"cwd\":\"test\",\"type\":\"info\"}" &
 done
@@ -317,7 +317,7 @@ wait
 - [ ] Node.js 已安装（v18+）
 - [ ] 依赖已安装（`npm install`）
 - [ ] 服务能够启动（`npm run dev`）
-- [ ] 健康检查通过（`curl http://100.103.79.86:8079/health`）
+- [ ] 健康检查通过（`curl http://localhost:8079/health`）
 - [ ] macOS 通知权限已启用
 - [ ] 防火墙配置正确
 

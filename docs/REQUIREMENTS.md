@@ -18,7 +18,7 @@
 
 **实现方式：**
 - Fastify HTTP 服务
-- 监听地址：`http://100.103.79.86:8079`
+- 监听地址：`http://localhost:8079`
 - 不关心通知内容的业务逻辑，只负责展示
 
 **核心接口：**
@@ -125,7 +125,7 @@ Prompt 需要让 AI 能够：
 立即调用 HTTP 接口通知用户有问题需要回答。
 
 接口信息：
-- URL: http://100.103.79.86:8079/notify
+- URL: http://localhost:8079/notify
 - 方法: POST
 - Content-Type: application/json
 

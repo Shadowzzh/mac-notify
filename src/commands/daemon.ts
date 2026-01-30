@@ -1,10 +1,10 @@
 import { installDaemon } from '../daemon/installer';
 import {
+  getDaemonLogs,
+  getDaemonStatus,
+  restartDaemon,
   startDaemon,
   stopDaemon,
-  restartDaemon,
-  getDaemonStatus,
-  getDaemonLogs,
   uninstallDaemon,
 } from '../daemon/manager';
 import type { DaemonInstallOptions } from '../shared/types';
